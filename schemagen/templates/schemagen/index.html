@@ -141,10 +141,10 @@
                                       <label for="inputState" class="text-black-50 mb-0">Type</label>
                                       <select id="inputState" class="form-control">
                                           {% for type in type_list %}
-                                          {% if type.name == "String" %}
-                                             <option  selected="selected">{{ type.name }}</option>
+                                          {% if type == "String" %}
+                                             <option  selected="selected">{{ type }}</option>
                                             {% else %}
-                                            <option>{{ type.name }}</option>
+                                            <option>{{ type }}</option>
                                            {% endif %}
                                           {% endfor %}
                                       </select>
@@ -170,9 +170,9 @@
                                       <select id="inputState_" class="form-control">
                                         {% for type in type_list %}
                                           {% if type.name == "Integer" %}
-                                             <option  selected="selected">{{ type.name }}</option>
+                                             <option  selected="selected">{{ type }}</option>
                                             {% else %}
-                                            <option>{{ type.name }}</option>
+                                            <option>{{ type }}</option>
                                            {% endif %}
                                           {% endfor %}
                                       </select>
@@ -203,7 +203,7 @@
                                               <select id="colum_type_new" class="form-control">
                                                   <option></option>
                                                   {% for type in type_list %}
-                                                    <option>{{ type.name }}</option>
+                                                    <option>{{ type }}</option>
                                                   {% endfor %}
                                               </select>
                                     </div>

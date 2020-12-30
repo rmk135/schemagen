@@ -7,7 +7,6 @@ professions = ['Developer', 'Software Engineer', 'Tech Lead', 'Team Lead']
 
 def phone_number():
     numbers = string.digits
-    print(numbers)
     phone = '+ ' + ''.join(random.choice(numbers) for i in range(3))+ ' '+ ''.join(random.choice(numbers) for i in range(7))
     return phone
 
@@ -21,7 +20,3 @@ def name_gen():
 def job_gen():
     job = random.choice(professions) + ' at ' + random.choice(companies)
     return job
-
-print(phone_number())
-#print(name_gen())
-print(job_gen())

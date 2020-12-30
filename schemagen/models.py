@@ -1,14 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from . import datagen
+from . import datagen, fields_types
 
 class User(AbstractUser):
     pass
 
-class Type(models.Model):
-    name = models.CharField(max_length=25)
-    description = models.CharField(max_length= 125)
-    def __str__(self): return f" Type: {self.name}  "
 
 class Schema(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
@@ -41,28 +37,36 @@ class Schema(models.Model):
     def __str__(self): return f"schema {self.name}"
 
 class Field(models.Model):
+
     name = models.CharField(max_length=25)
-    _type = models.ForeignKey("Type", on_delete=models.CASCADE )
-    order = models.PositiveSmallIntegerField(default = 1)#TODO : поменять default на более осмысленное и уникальное или убрать вовсе
-    #_from = models.IntegerField()
-    #_to = models.IntegerField()
+    order = models.PositiveSmallIntegerField(default = 1, null=True, blank=True)#TODO : поменять default на более осмысленное и уникальное или убрать вовсе
+    kind = models.CharField(
+        max_length=64,
+        choices=fields_types.type_choice,
+        default="Temporary Type" #TODO: разобраться с : поменять default или
+
+    )
+
+    def generate_value(self):
+        if self.kind == fields_types.TYPE_FULL_NAME:
+            return datagen.name_gen()
+        elif self.kind == fields_types.TYPE_JOB:
+            return datagen.job_gen()
+        # Add more generators
+        else:
+            raise ValueError(f'No generator for field type "{self.kind}"')
+
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
-            "type_id": self._type.id,
-            "type_name": self._type.name,
-            "type_description": self._type.description,
-            "order": self.order
+            "order": self.order,
         }
 
-    def __str__(self): return f" field: {self.name} | type: {self._type} "
+    def __str__(self): return f" field: {self.name} | type: {self.kind} "
 
 class Schema_Field(models.Model):
-    TYPE_FULL_NAME = 'FULL_NAME'
-    TYPE_JOB = 'JOB'
-
 
     schema = models.ForeignKey(
         Schema,
@@ -71,17 +75,7 @@ class Schema_Field(models.Model):
     )
     field = models.ForeignKey("Field", on_delete=models.CASCADE)
 
-    order = models.IntegerField()
+    #order = models.IntegerField()
 
     def __str__(self): return f" field: {self.field.name} of schema {self.schema.name} "
-
-
-    def generate_value(self):
-        if self.type == self.TYPE_FULL_NAME:
-            return datagen.name_gen()
-        elif self.type == self.TYPE_JOB:
-            return datagen.job_gen()
-        # Add more generators
-        else:
-            raise ValueError(f'No generator for field type "{self.type}"')
 

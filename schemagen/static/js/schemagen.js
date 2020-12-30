@@ -68,7 +68,7 @@ function add_field() {
 }
 
 function visualisation_add_column(column){
-
+console.log(column)
     rows = document.querySelector('#custom_colums')
         var field = document.createElement('div');
         field.className = 'form-row';
@@ -88,7 +88,7 @@ function visualisation_add_column(column){
                     for (let i = 0; i < select_.length; i++) {
                         option = '<option>'+ select_[i].textContent+'</option>'
                         select.innerHTML += option
-                        if (select[i].textContent === column.type_name) select[i].selected = true;
+                        if (select[i].textContent === column.kind) select[i].selected = true;
                     }
 
             div_for_type.innerHTML = label;

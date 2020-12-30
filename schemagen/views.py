@@ -9,12 +9,12 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Type, Field, Schema, Schema_Field
+from .models import User, Field, Schema, Schema_Field
+from . import fields_types
 
 def index(request):
-    types = Type.objects.all()
     return render(request, "schemagen/index.html", {
-        "type_list": types,
+        "type_list": fields_types.type_list,
     })
 
 
@@ -66,12 +66,10 @@ def add_custom_field(request):
     data = json.loads(request.body)
 
     name = data["name"]
-    type_name = data["type"]
+    kind = data["type"]
     order = data["order"]
 
-    _type = Type.objects.get(name=type_name)
-
-    field = Field.objects.create(name=name, _type=_type, order=order)
+    field = Field.objects.create(name=name, kind=kind, order=order)
     field.save()
     return JsonResponse({"message": "Post posted successfully.", "data": field.serialize() }, status=201)
 
