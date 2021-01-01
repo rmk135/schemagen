@@ -43,7 +43,7 @@ function submit_schema() {
 
 function add_field() {
     var name = document.querySelector('#colum_name_new').value;
-    var type =  document.querySelector('#colum_type_new').value;
+    var kind =  document.querySelector('#colum_type_new').value;
     var order =  document.querySelector('#colum_order_new').value;
 
 
@@ -52,8 +52,8 @@ function add_field() {
           method: 'POST',
           body: JSON.stringify({
               name: name,
-              type: type,
-              order: order,
+              order:order,
+              kind:kind
           })
         })
         .then(response => response.json())
@@ -62,7 +62,6 @@ function add_field() {
             document.querySelector('#colum_name_new').value = '';
             document.querySelector('#colum_order_new').value = '';
             visualisation_add_column(result.data);
-
         });
 
 }
@@ -88,7 +87,15 @@ console.log(column)
                     for (let i = 0; i < select_.length; i++) {
                         option = '<option>'+ select_[i].textContent+'</option>'
                         select.innerHTML += option
-                        if (select[i].textContent === column.kind) select[i].selected = true;
+                        if (select[i].textContent === column.kind)
+                         {
+                            console.log("!!!!!!!!")
+
+                            console.log(" - "+column.kind)
+                            console.log(select[i].textContent)
+                            console.log(select_[i].textContent)
+                            select[i].selected = true;
+                         }
                     }
 
             div_for_type.innerHTML = label;

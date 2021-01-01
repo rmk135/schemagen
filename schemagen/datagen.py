@@ -20,3 +20,8 @@ def name_gen():
 def job_gen():
     job = random.choice(professions) + ' at ' + random.choice(companies)
     return job
+
+def sity_gen():
+    sities = ["NY", "Kiev", "Huston"]
+    town = random.choice(sities)
+    return town

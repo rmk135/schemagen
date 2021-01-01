@@ -10,27 +10,48 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Field, Schema, Schema_Field
-from . import fields_types
+from . import fields_types, datagen
 
 def index(request):
     return render(request, "schemagen/index.html", {
         "type_list": fields_types.type_list,
     })
 
-
 @csrf_exempt
 @login_required
 def generation_data(request):
 #TODO с фронта ИД схемы 
 
-    table_name = 'table_name_TEMP' #TODO !! временно сюда внести имя, которое придумала пользователь
-    row_count = 50 #TODO !! временно сюда внести колличество, которое указал пользователь
-    file_url = 'media/'+ table_name  + '.csv'
+    table_name = 'table_name_TEMP' #TODO !! временно сюда внести имя, которое придумал пользователь
+    row_count = 10 #TODO !! временно сюда внести колличество, которое указал пользователь
+    file_url = 'media/'+ table_name + '.csv'
+
+    #schemas = Schema.objects.all()
+    #for s in schemas:
+       #print(" - "*20 +"s.id: " + str(s.id))
+    schema = Schema.objects.get(id = 10)
+
+    for _ in Schema_Field.objects.filter(schema = schema):
+        print(_.field.kind)
+
+    colmn_list_name = [
+            schema_field.field.name
+            for schema_field in Schema_Field.objects.filter(schema = schema)
+        ]
+    #rows = schema.get_column_names()
+    rows = schema.get_rows(row_count)
+
+    '''row = [
+        schema_field.field.generate_value()
+        for schema_field in Schema_Field.objects.filter(schema=schema)
+    ]
+    print("= "*20 + str(row))'''
+
     with open(file_url, 'w', newline='') as f:
         thewriter = csv.writer(f)
-        thewriter.writerow(['col1','col2','col3'])
-        for i in range(row_count):
-            thewriter.writerow(['one','two','three'])
+        thewriter.writerow(colmn_list_name)
+        for i in range(len(rows)):
+            thewriter.writerow(rows[i])
 
     return JsonResponse({"message": "Post posted successfully.", "result": "Generation of data done" }, status=201)
 
@@ -66,7 +87,7 @@ def add_custom_field(request):
     data = json.loads(request.body)
 
     name = data["name"]
-    kind = data["type"]
+    kind = data["kind"]
     order = data["order"]
 
     field = Field.objects.create(name=name, kind=kind, order=order)

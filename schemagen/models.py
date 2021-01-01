@@ -18,7 +18,7 @@ class Schema(models.Model):
 
     def get_column_names(self):
         return [
-            field.name
+            field.field.name
             for field in self.fields.all()  # TODO:!!! order by fields.order
         ]
 
@@ -28,7 +28,7 @@ class Schema(models.Model):
         rows = []
         for _ in range(number_of_rows):
             row = [
-                field.generate_value()
+                field.field.generate_value()
                 for field in fields
             ]
             rows.append(row)
@@ -52,6 +52,8 @@ class Field(models.Model):
             return datagen.name_gen()
         elif self.kind == fields_types.TYPE_JOB:
             return datagen.job_gen()
+        elif self.kind == fields_types.TYPE_SITY:
+            return datagen.sity_gen()
         # Add more generators
         else:
             raise ValueError(f'No generator for field type "{self.kind}"')
@@ -62,6 +64,7 @@ class Field(models.Model):
             "id": self.id,
             "name": self.name,
             "order": self.order,
+            "kind": self.kind,
         }
 
     def __str__(self): return f" field: {self.name} | type: {self.kind} "
