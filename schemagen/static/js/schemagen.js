@@ -4,18 +4,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.querySelector('#btn_add_field_schema').addEventListener('click', add_field);
 document.querySelector('#btn_submit_schema').addEventListener('click', submit_schema);
-document.querySelector('#btn_generation_data').addEventListener('click', generation_data);
+
+
+var btns_gen_data = document.querySelectorAll('.btn_data_gen_');
+for(i=0;i<btns_gen_data.length; i++){
+         btns_gen_data[i].addEventListener('click', pre_generator_data);
+         }
 });
 
-function generation_data() {
-    //var count = document.querySelector('#btn_generation_data').value;
-    //console.log(count)
+function pre_generator_data() {
+    var schema_id = this.id
+    var div = document.querySelector('#div_'+schema_id)
+    var div_add = document.createElement('div');
+        var count_input = document.createElement("INPUT");
+        count_input.className = "form-group col-md-1"
+        count_input.id =  "count_input_"+ schema_id
+
+        var btn = document.createElement("BUTTON");
+        btn.className = "btn btn-outline-primary";
+        btn.innerText = '+';
+        var name_input = document.createElement("INPUT");
+        
+        name_input.className = "form-group col-md-2"
+        name_input.placeholder = "Name for table"
+        name_input.id = "name_input"+schema_id
+
+            div_add.innerHTML =  "";
+            div_add.append(name_input)
+            div_add.append("  count rows: ")
+            div_add.append(count_input)
+            div_add.append(" ")
+            div_add.append(btn)
+
+        btn.addEventListener('click', () => generation_data(schema_id));
+    div.append(div_add)
+
+}
+
+function generation_data(schema_id) {
+    count_rows = document.querySelector('#count_input_'+schema_id).value;
+    table_name =document.querySelector('#name_input'+schema_id).value;
 
     fetch('/generation_data', {
           credentials: 'include',
           method: 'POST',
           body: JSON.stringify({
-              count: "3"
+              "schema_id": schema_id,
+              "count_rows": count_rows,
+              "table_name": table_name
           })
         })
         .then(response => response.json())

@@ -44,10 +44,13 @@ class Field(models.Model):
         max_length=64,
         choices=fields_types.type_choice,
         default="Temporary Type" #TODO: разобраться с : поменять default или
-
     )
 
     def generate_value(self):
+        print("- -"*77)
+        print(self.kind)
+        print(fields_types.TYPE_JOB)
+        print("- -"*77)
         if self.kind == fields_types.TYPE_FULL_NAME:
             return datagen.name_gen()
         elif self.kind == fields_types.TYPE_JOB:

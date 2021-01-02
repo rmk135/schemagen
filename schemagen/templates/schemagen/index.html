@@ -83,30 +83,27 @@
 
         </section>
         <!-- About-->
+        {% if user.is_authenticated %}
         <section class="about-section text-center" id="about">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
-
-
                         <h2 class="text-white mb-4">Built schema with schemagen</h2>
-                        <p class="text-white-50">
-                            Data schemas:
-
+                        <div class="text-white-50">Data schemas:
                             <a class="btn btn-outline-primary js-scroll-trigger"  href="#create_schema">+</a>
+                            </div>
+                         {% for schema in schemas %}
+                        <div class="text-white-50" id="div_{{ schema.id }}"> {{ schema }}
+                        | <a id="{{ schema.id }}" class="btn_data_gen_">Generate data</a>
+                        | <a href="">delete</a></div>
+                         {% endfor %}
 
-                        <ol class="text-white-50">
-                        <li>Customers 23-12-2020 | <a href="">edit</a> | <a href="">delete</a></li>
-                        <li>Customers 23-12-2020 | <a href="">edit</a> | <a href="">delete</a></li>
-                        <li>Customers 23-12-2020 | <a href="">edit</a> | <a href="">delete</a></li>
-                    </ol>
-
-                        </p>
                     </div>
                 </div>
                 <img class="img-fluid" src="{% static 'assets/img/ipad.png' %}" alt="" />
             </div>
         </section>
+
         <!-- Projects-->
         <section class="projects-section bg-light" id="create_schema">
             <div class="container">
@@ -191,7 +188,7 @@
                                   <div id="custom_colums">
 
                                   </div>
-<hr>
+                                <hr>
 
                                  <div class="form-row">
                                     <div class="form-group col-md-6">
@@ -218,13 +215,12 @@
                                     </div>
                                   </div>
 
-
-
-
                         </div>
                     </div>
                 </div>
-
+            </div>
+        </section>
+         {% endif %}
         <!-- Contact-->
         <section class="contact-section bg-black" id="contacts">
             <div class="container">

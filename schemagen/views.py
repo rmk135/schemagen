@@ -13,39 +13,35 @@ from .models import User, Field, Schema, Schema_Field
 from . import fields_types, datagen
 
 def index(request):
+    user = request.user
+    schemas = Schema.objects.filter(user=user)
     return render(request, "schemagen/index.html", {
         "type_list": fields_types.type_list,
+        "schemas": schemas
     })
 
 @csrf_exempt
 @login_required
 def generation_data(request):
-#TODO с фронта ИД схемы 
 
-    table_name = 'table_name_TEMP' #TODO !! временно сюда внести имя, которое придумал пользователь
-    row_count = 10 #TODO !! временно сюда внести колличество, которое указал пользователь
-    file_url = 'media/'+ table_name + '.csv'
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required."}, status=400)
 
-    #schemas = Schema.objects.all()
-    #for s in schemas:
-       #print(" - "*20 +"s.id: " + str(s.id))
-    schema = Schema.objects.get(id = 10)
+    data = json.loads(request.body)
+    table_name = data["table_name"]
+    row_count = int(data["count_rows"])
 
-    for _ in Schema_Field.objects.filter(schema = schema):
-        print(_.field.kind)
+    file_url = 'media/' + table_name + '.csv'
+    shema_id = data["schema_id"]
+
+    schema = Schema.objects.get(id = shema_id)
 
     colmn_list_name = [
             schema_field.field.name
             for schema_field in Schema_Field.objects.filter(schema = schema)
         ]
-    #rows = schema.get_column_names()
     rows = schema.get_rows(row_count)
 
-    '''row = [
-        schema_field.field.generate_value()
-        for schema_field in Schema_Field.objects.filter(schema=schema)
-    ]
-    print("= "*20 + str(row))'''
 
     with open(file_url, 'w', newline='') as f:
         thewriter = csv.writer(f)
