@@ -60,7 +60,7 @@ media/
 
 # Flask stuff:
 instance/
-.webassets-cache
+.webassets-cacheidea
 
 # Scrapy stuff:
 .scrapy

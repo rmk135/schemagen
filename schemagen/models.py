@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
 from . import datagen, fields_types
+
 
 class User(AbstractUser):
     pass
@@ -9,6 +11,7 @@ class User(AbstractUser):
 class Schema(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
     name = models.CharField(max_length=25)
+
     def serialize(self):
         return {
             "id": self.id,
@@ -35,6 +38,7 @@ class Schema(models.Model):
         return rows
 
     def __str__(self): return f"schema {self.name}"
+
 
 class Field(models.Model):
 
