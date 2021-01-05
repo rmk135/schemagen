@@ -43,18 +43,15 @@ class Schema(models.Model):
 class Field(models.Model):
 
     name = models.CharField(max_length=25)
-    order = models.PositiveSmallIntegerField(default = 1, null=True, blank=True)#TODO : поменять default на более осмысленное и уникальное или убрать вовсе
+    order = models.PositiveSmallIntegerField(default=1, null=True, blank=True)
+
     kind = models.CharField(
         max_length=64,
         choices=fields_types.type_choice,
-        default="Temporary Type" #TODO: разобраться с : поменять default или
+        default="Temporary Type"  # TODO: разобраться с : поменять default или
     )
 
     def generate_value(self):
-        print("- -"*77)
-        print(self.kind)
-        print(fields_types.TYPE_JOB)
-        print("- -"*77)
         if self.kind == fields_types.TYPE_FULL_NAME:
             return datagen.name_gen()
         elif self.kind == fields_types.TYPE_JOB:
@@ -64,7 +61,6 @@ class Field(models.Model):
         # Add more generators
         else:
             raise ValueError(f'No generator for field type "{self.kind}"')
-
 
     def serialize(self):
         return {
@@ -76,6 +72,7 @@ class Field(models.Model):
 
     def __str__(self): return f" field: {self.name} | type: {self.kind} "
 
+
 class Schema_Field(models.Model):
 
     schema = models.ForeignKey(
@@ -85,7 +82,5 @@ class Schema_Field(models.Model):
     )
     field = models.ForeignKey("Field", on_delete=models.CASCADE)
 
-    #order = models.IntegerField()
-
-    def __str__(self): return f" field: {self.field.name} of schema {self.schema.name} "
-
+    def __str__(self):
+        return f" field: {self.field.name} of schema {self.schema.name} "

@@ -2,7 +2,7 @@ import csv
 import json
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.db import IntegrityError
 
@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Field, Schema, Schema_Field
-from . import fields_types, datagen
+from . import fields_types
+
 
 def index(request):
     user = request.user
@@ -19,6 +20,7 @@ def index(request):
         "type_list": fields_types.type_list,
         "schemas": schemas
     })
+
 
 @csrf_exempt
 @login_required
@@ -32,24 +34,25 @@ def generation_data(request):
     row_count = int(data["count_rows"])
 
     file_url = 'media/' + table_name + '.csv'
-    shema_id = data["schema_id"]
+    schema_id = data["schema_id"]
 
-    schema = Schema.objects.get(id = shema_id)
+    schema = Schema.objects.get(id=schema_id)
 
-    colmn_list_name = [
+    column_list_name = [
             schema_field.field.name
-            for schema_field in Schema_Field.objects.filter(schema = schema)
+            for schema_field in Schema_Field.objects.filter(schema=schema)
         ]
     rows = schema.get_rows(row_count)
 
-
     with open(file_url, 'w', newline='') as f:
         thewriter = csv.writer(f)
-        thewriter.writerow(colmn_list_name)
+        thewriter.writerow(column_list_name)
         for i in range(len(rows)):
             thewriter.writerow(rows[i])
 
-    return JsonResponse({"message": "Post posted successfully.", "result": "Generation of data done" }, status=201)
+    return JsonResponse({"message": "Post posted successfully.",
+                         "result": "Generation of data done"}, status=201)
+
 
 @csrf_exempt
 @login_required
@@ -61,23 +64,19 @@ def submit_schema(request):
 
     name = data["name"]
 
-    schema = Schema.objects.create(name=name, user = request.user)
+    schema = Schema.objects.create(name=name, user=request.user)
     schema.save()
     fields = Field.objects.all()
     for field in fields:
-        list_schema_field = Schema_Field.objects.create(schema=schema, field=field)
-        list_schema_field.save()
-        #и пробижаться по всем текущим полям + ИД как раз созданной схемы'''
-    return JsonResponse({"message": "Post posted successfully.", "data": schema.serialize() }, status=201)
-
-
-
+        schema_fields = Schema_Field.objects.create(schema=schema, field=field)
+        schema_fields.save()
+    return JsonResponse({"message": "Post posted successfully.",
+                         "data": schema.serialize()}, status=201)
 
 
 @csrf_exempt
 @login_required
 def add_custom_field(request):
-    # Composing a new post must be via POST
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
     data = json.loads(request.body)
@@ -88,15 +87,12 @@ def add_custom_field(request):
 
     field = Field.objects.create(name=name, kind=kind, order=order)
     field.save()
-    return JsonResponse({"message": "Post posted successfully.", "data": field.serialize() }, status=201)
-
-
-
+    return JsonResponse({"message": "Post posted successfully.",
+                         "data": field.serialize()}, status=201)
 
 
 def login_view(request):
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]

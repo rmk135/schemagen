@@ -108,6 +108,8 @@ venv.bak/
 # PyCharm
 .idea/
 
+schemagen/__pycache__/
+
 # VScode
 .vscode
 
