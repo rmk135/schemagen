@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='field',
             name='kind',
-            field=models.CharField(choices=[('FULL_NAME', 'Full name'), ('JOB', 'Job')], default="Temporary TypeYou are trying to add a non-nullable field 'order' to schema_field without a default; we can't do that (the database needs something to populate existing rows).\nPlease select a fix:\n 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)\n 2) Quit, and let me add a default in models.py\n", max_length=64),
+            field=models.CharField(choices=[('FULL_NAME', 'Full name'), ('JOB', 'Job')], max_length=64),
         ),
         migrations.AlterField(
             model_name='schema_field',
