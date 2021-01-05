@@ -14,18 +14,20 @@ from . import fields_types
 
 
 def index(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("login"))
+
     user = request.user
     schemas = Schema.objects.filter(user=user)
     return render(request, "schemagen/index.html", {
-        "type_list": fields_types.type_list,
-        "schemas": schemas
-    })
+            "type_list": fields_types.type_list,
+            "schemas": schemas
+        })
 
 
 @csrf_exempt
 @login_required
 def generation_data(request):
-
     if request.method != "POST":
         return JsonResponse({"error": "POST request required."}, status=400)
 

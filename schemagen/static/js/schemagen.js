@@ -82,7 +82,6 @@ function add_field() {
     var kind =  document.querySelector('#colum_type_new').value;
     var order =  document.querySelector('#colum_order_new').value;
 
-
     fetch('/add_custom_field', {
           credentials: 'include',
           method: 'POST',
@@ -123,15 +122,15 @@ console.log(column)
                     for (let i = 0; i < select_.length; i++) {
                         option = '<option>'+ select_[i].textContent+'</option>'
                         select.innerHTML += option
+
+                        selected_i = 0;
                         if (select[i].textContent === column.kind)
                          {
-                            console.log("!!!!!!!!")
-
-                            console.log(" - "+column.kind)
-                            console.log(select[i].textContent)
-                            console.log(select_[i].textContent)
                             select[i].selected = true;
+                            console.log(" = = = = = = = = = = = = = = =  selected " )
+                            console.log("select[i].textContent = " select[i].textContent)
                          }
+
                     }
 
             div_for_type.innerHTML = label;
