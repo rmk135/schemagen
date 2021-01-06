@@ -28,7 +28,7 @@ SECRET_KEY = 'f%@i^o$-!ili_ms+76g3zc)*8v-097te+p$51_l$my@*@a_r#7'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'shemagen.herokuapp.com'
+    'shemagen.herokuapp.com',
 ]
 
 
