@@ -127,8 +127,6 @@ console.log(column)
                         if (select[i].textContent === column.kind)
                          {
                             select[i].selected = true;
-                            console.log(" = = = = = = = = = = = = = = =  selected " )
-                            console.log("select[i].textContent = " select[i].textContent)
                          }
 
                     }
