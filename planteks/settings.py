@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import django_heroku
+#import django_heroku
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'shemagen.herokuapp.com',
+    'http://dpaste.com/',
+    '127.0.0.1'
 ]
 
 
@@ -80,11 +82,33 @@ WSGI_APPLICATION = 'planteks.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}'''
+
+
+
+DATABASES = {
+
+    'default': {
+
+        'ENGINE': 'django.db.backends.postgresql',
+
+        'NAME': 'postgres',
+
+        'USER': 'postgres',
+
+        'PASSWORD': 'postgres',
+
+        'HOST': 'localhost',
+
+        'PORT': '5432',
+
+    }
+
 }
 
 
@@ -135,6 +159,6 @@ if DEBUG:
    ]
 else:
    STATIC_ROOT = os.path.join(BASE_DIR,'static')
-   django_heroku.settings(locals())
+   #django_heroku.settings(locals())
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
