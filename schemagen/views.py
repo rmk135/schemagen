@@ -9,7 +9,7 @@ from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Field, Schema, Schema_Field
+from .models import User, Field, Schema
 from . import fields_types
 
 
@@ -63,14 +63,43 @@ def submit_schema(request):
         return JsonResponse({"error": "POST request required."}, status=400)
     data = json.loads(request.body)
 
-    name = data["name"]
 
-    schema = Schema.objects.create(name=name, user=request.user)
+    # Метод получает данные схемы и полей одним json объектом:
+    data = {
+        'name': 'example-scheme',
+        'fields': [
+            {
+                'name': 'field1',
+                'order': 1,
+                'kind': 'FULL_NAME',
+            },
+            {
+                'name': 'field2',
+                'order': 2,
+                'kind': 'Job',
+            },
+            {
+                'name': 'field2',
+                'order': 3,
+                'kind': 'Sity',
+            },
+        ],
+    }
+
+    # Тут мы создаем схему:
+    schema = Schema.objects.create(name=data['name'], user=request.user)
     schema.save()
-    fields = Field.objects.all()
-    for field in fields:
-        schema_fields = Schema_Field.objects.create(schema=schema, field=field)
-        schema_fields.save()
+
+    for field_data in data['fields']:
+        # Тут создаем поля схемы
+        field = Field(
+            name=field_data['name'],
+            order=field_data['order'],
+            kind=field_data['kind'],
+            schema=schema,  # Тут указывается связь поля со схемой
+        )
+        field.save()
+
     return JsonResponse({"message": "Post posted successfully.",
                          "data": schema.serialize()}, status=201)
 

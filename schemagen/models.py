@@ -51,6 +51,12 @@ class Field(models.Model):
         default="Temporary Type"  # TODO: разобраться с : поменять default или
     )
 
+    schema = models.ForeignKey(
+        Schema,
+        on_delete=models.CASCADE,
+        related_name='fields',
+    )
+
     def generate_value(self):
         if self.kind == fields_types.TYPE_FULL_NAME:
             return datagen.name_gen()
@@ -71,16 +77,3 @@ class Field(models.Model):
         }
 
     def __str__(self): return f" field: {self.name} | type: {self.kind} "
-
-
-class Schema_Field(models.Model):
-
-    schema = models.ForeignKey(
-        Schema,
-        on_delete=models.CASCADE,
-        related_name='fields',
-    )
-    field = models.ForeignKey("Field", on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f" field: {self.field.name} of schema {self.schema.name} "
