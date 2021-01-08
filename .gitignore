@@ -115,3 +115,6 @@ schemagen/__pycache__/
 
 # misc
 .DS_Store
+
+# Postgres data
+.postgres-data/
