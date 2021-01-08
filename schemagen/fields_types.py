@@ -1,5 +1,5 @@
 TYPE_FULL_NAME = 'FULL_NAME'
-TYPE_JOB = 'JOB'
+TYPE_JOB = 'Job'
 TYPE_SITY = 'Sity'
 
 type_choice = [

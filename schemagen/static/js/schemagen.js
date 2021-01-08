@@ -57,6 +57,16 @@ function generation_data(schema_id) {
         .then(response => response.json())
         .then(result => {
             console.log(result.data);
+                    var div = document.querySelector('#div_'+schema_id)
+        var btn = document.createElement("BUTTON");
+            btn.setAttribute('type', 'submit');
+            btn.className = "btn btn-outline-primary";
+            btn.innerText = 'Upload';
+            
+        div.append(btn)
+        //var btn_download = '<input type="file" name="myfile">   <button type="submit">Upload</button>'
+
+
         });
 }
 
@@ -98,6 +108,7 @@ function add_field() {
             document.querySelector('#colum_order_new').value = '';
             visualisation_add_column(result.data);
         });
+
 
 }
 

@@ -34,7 +34,6 @@ def generation_data(request):
     data = json.loads(request.body)
     table_name = data["table_name"]
     row_count = int(data["count_rows"])
-
     file_url = 'media/' + table_name + '.csv'
     schema_id = data["schema_id"]
 
